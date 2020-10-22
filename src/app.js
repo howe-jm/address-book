@@ -89,6 +89,22 @@ app.post('/address', (req, res) => {
   res.status(204).end();
 });
 
+app.delete('/address/:userId', (req, res) => {
+  const { userId } = req.params;
+  const index = userAddrs.findIndex(
+    (address) => address.id === userId
+  );
+  if (index === -1) {
+    return res
+      .status(404)
+      .send({ message: 'Address not found.' });
+  }
+
+  userAddrs.splice(index, 1);
+
+  res.status(204).end();
+});
+
 app.get('/address', (req, res) => {
   res.status(200).json(userAddrs);
 });
