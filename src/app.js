@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
-const uuid = require('uuid');
+const { v4: uuid } = require('uuid');
 
 const app = express();
 
@@ -54,10 +54,24 @@ app.post('/address', (req, res) => {
       .status(400)
       .send({ message: 'State required.' });
   }
+  if (state.length !== 2) {
+    return res.status(400).send({
+      message: `State must be two-character abbreviation. Length: ${state.length}`,
+    });
+  }
+
   if (!zip || zip === '') {
     return res
       .status(400)
       .send({ message: 'Zip required.' });
+  }
+  if (
+    typeof zip !== 'number' ||
+    zip.toString().length !== 5
+  ) {
+    return res
+      .status(400)
+      .send({ message: 'Zip must be a 5-digit number' });
   }
 
   let id = uuid();
