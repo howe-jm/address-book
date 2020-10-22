@@ -1,6 +1,8 @@
-# Express Boilerplate!
+# Address Book Assignment
 
-This is a boilerplate project used for starting new projects!
+A simple address book API that stores basically validated addresses in memory and shouldn't be deployed anywhere for any reason other than completing this assignment.
+
+Created using Express-Boilerplate.
 
 ## Set up
 
