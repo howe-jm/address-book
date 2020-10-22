@@ -14,6 +14,13 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
+app.post('/address', (req, res) => {
+  console.log('Post request received');
+  res
+    .status(200)
+    .send({ message: 'Post request received' });
+});
+
 app.use(function errorHandler(error, req, res, next) {
   let response;
   if (NODE_ENV === 'production') {
