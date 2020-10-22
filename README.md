@@ -6,7 +6,7 @@ Created using Express-Boilerplate.
 
 ## Set up
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+Complete the following steps to start a new project, address-book:
 
 1. Clone this repository to your local machine `git clone (URL or SSH) address-book`
 2. `cd` into the cloned repository
