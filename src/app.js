@@ -12,6 +12,27 @@ const morganOption =
   NODE_ENV === 'production' ? 'tiny' : 'common';
 
 app.use(morgan(morganOption));
+app.use(function validateBearerToken(req, res, next) {
+  const apiToken = process.env.API_TOKEN;
+  const authToken = req.get('Authorization');
+  if (!authToken) {
+    return res
+      .status(401)
+      .json({ message: 'Invalid authenticaion method' });
+  }
+  if (!authToken.startsWith('Bearer ')) {
+    return res.status(401).json({
+      message: 'Invalid authenticaion method',
+    });
+  }
+
+  if (!authToken || authToken.split(' ')[1] !== apiToken) {
+    return res
+      .status(401)
+      .json({ error: 'Unauthorized request' });
+  }
+  next();
+});
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
@@ -32,30 +53,30 @@ app.post('/address', (req, res) => {
   if (!firstName || firstName === '') {
     return res
       .status(400)
-      .send({ message: 'First Name required.' });
+      .json({ message: 'First Name required.' });
   }
   if (!lastName || lastName === '') {
     return res
       .status(400)
-      .send({ message: 'Last Name required.' });
+      .json({ message: 'Last Name required.' });
   }
   if (!address1 || address1 === '') {
     return res
       .status(400)
-      .send({ message: 'Address1 required.' });
+      .json({ message: 'Address1 required.' });
   }
   if (!city || city === '') {
     return res
       .status(400)
-      .send({ message: 'City required.' });
+      .json({ message: 'City required.' });
   }
   if (!state || state === '') {
     return res
       .status(400)
-      .send({ message: 'State required.' });
+      .json({ message: 'State required.' });
   }
   if (state.length !== 2) {
-    return res.status(400).send({
+    return res.status(400).json({
       message: `State must be two-character abbreviation. Length: ${state.length}`,
     });
   }
@@ -63,7 +84,7 @@ app.post('/address', (req, res) => {
   if (!zip || zip === '') {
     return res
       .status(400)
-      .send({ message: 'Zip required.' });
+      .json({ message: 'Zip required.' });
   }
   if (
     typeof zip !== 'number' ||
@@ -71,7 +92,7 @@ app.post('/address', (req, res) => {
   ) {
     return res
       .status(400)
-      .send({ message: 'Zip must be a 5-digit number' });
+      .json({ message: 'Zip must be a 5-digit number' });
   }
 
   let id = uuid();
@@ -97,7 +118,7 @@ app.delete('/address/:userId', (req, res) => {
   if (index === -1) {
     return res
       .status(404)
-      .send({ message: 'Address not found.' });
+      .json({ message: 'Address not found.' });
   }
 
   userAddrs.splice(index, 1);
